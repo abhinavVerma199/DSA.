@@ -1,54 +1,61 @@
 class Solution {
 public:
-    void topSortBfs(int n, vector<int>& topoOrder,unordered_map<int , list<int> >& adjList) {
-		queue<int> q;
-		map<int,int> indegree;
-		
-		//initialise kardi indegree ssanki
-		for( auto i : adjList) {
-			for(auto nbr: i.second) {
-				indegree[nbr]++;
-			}
-		}
-		//push all zero indegree wali node into queue
-		for(int node=0; node<n; node++) {
-			if(indegree[node] == 0) {
-				q.push(node);
-			}
-		}
+    void solve(int src, int parent, unordered_map<int,list<int> >& adj, int &timer, 
+    vector<vector<int>>& ans,vector<int>& tin,vector<int>& low,unordered_map<int,bool>& vis ) {
+        
+        vis[src] = true;
+        tin[src] = timer;
+        low[src] = timer;
+        timer++;
 
-		//BFS chalate hai
-		while(!q.empty()) {
-			int frontNode = q.front();
-			q.pop();
-			topoOrder.push_back(frontNode);
+        //nbrs
+        for(auto nbr: adj[src]) {
+            if(nbr == parent) {
+                //ignore this
+                continue;
+            }
+            if(!vis[nbr]) {
+                //step1
+                solve(nbr, src, adj, timer, ans, tin, low, vis);
+                //low update
+                low[src] = min(low[src], low[nbr]);
+                //bridge testing
+                if(low[nbr] > tin[src]) {
+                    vector<int> temp;
+                    temp.push_back(src);
+                    temp.push_back(nbr);
+                    ans.push_back(temp);
+                }
 
-			for(auto nbr: adjList[frontNode]) {
-				indegree[nbr]--;
-
-				//check for zero
-				if(indegree[nbr] == 0) {
-					q.push(nbr);
-				}
-			}
-		}
-	}
-    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
-        unordered_map<int , list<int> > adjList;
-        for(vector<int> i: prerequisites) {
-            int u = i[0];
-            int v = i[1];
-            adjList[v].push_back(u);
+            }
+            else {
+                //ek or raasta milgya 
+                //low update
+                low[src] = min(low[src], low[nbr]);
+                //no need of bridge testing
+            }
         }
 
-        vector<int> topoSort;
-        topSortBfs(numCourses, topoSort, adjList);
-        //valid 
-        if(topoSort.size() == numCourses)
-            return topoSort;
-        else{
-            //invalid
-            return {};
-        } 
+
+    }
+    vector<vector<int>> criticalConnections(int n, vector<vector<int>>& connections) {
+        unordered_map<int,list<int> > adj;
+        for(auto vec: connections) {
+            int u = vec[0];
+            int v = vec[1];
+            adj[u].push_back(v);
+            adj[v].push_back(u);
+        }
+
+        //main logic 
+        int timer = 1;
+        vector<vector<int>> ans;
+        vector<int> low(n,0);
+        vector<int> tin(n,0);
+        int src = 0;
+        int parent = -1;
+        unordered_map<int,bool> vis;
+        solve(src, parent, adj,timer,ans, tin, low,vis);
+        return ans;
     }
 };
