@@ -1,48 +1,125 @@
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
- * };
- */
-class Solution {
-public:
-    int height(TreeNode* root) {
-        if(root == NULL ){
-            return 0;
-        }
-        int leftHeight = height(root->left);
-        int rightHeight = height(root->right);
-        int finalAns = max(leftHeight, rightHeight) + 1;
-        return finalAns;
+#include <iostream>
+using namespace std;
+
+class Stack {
+  public:
+    int* arr;
+    int size;
+    int top;
+
+    Stack(int size) {
+      arr = new int[size];
+      this->size = size;
+      this->top = -1;
     }
 
-    bool isBalanced(TreeNode* root) {
-        //base case
-        if(root == NULL) {
-            return true;
-        }
+    void push(int data) {
+      if(top == size-1) {
+        cout << "Stack overflow" << endl;
+        return;
+      }
+      else {
+        top++;
+        arr[top] = data;
+      }
+    }
 
-        //currNode - solve
-        int leftHeight = height(root->left);
-        int rightHeight = height(root->right);
-        int diff = abs(leftHeight-rightHeight);
+    void pop() {
+      if(top == -1) {
+        cout << "Stack underflow" << endl;
+        return;
+      }
+      else {
+        top--;
+      }
+    }
 
-        bool currNodeAns = (diff <= 1);
+    bool isEmpty() {
+      if(top == -1) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
 
-        bool leftAns = isBalanced(root->left);
-        bool rightAns = isBalanced(root->right);
+    int getTop() {
+      if(top == -1) {
+        cout << "Stack is empty" << endl;
+        return -1;
+      }
+      else {
+        return arr[top];
+      }   
+    }
 
-        if(currNodeAns && leftAns && rightAns) {
-            return true;
-        }
-        else {
-            return false;
-        }
+    int getSize() {
+      return top+1;
+    }
 
+    void print() {
+      cout << "Top:  " << top << endl;
+      cout << "Top element: " << getTop() << endl; 
+      cout << "Stack: ";
+      for(int i=0; i<getSize(); i++) {
+        cout << arr[i] << " ";
+      }  cout << endl << endl;
     }
 };
+
+int main() {
+
+  //creation 
+  Stack st(8);
+
+  //push
+  st.push(10);
+  //st.print();
+
+  st.push(20);
+  st.print();
+
+  cout<< endl << "Top elemet: " << st.getTop() << endl;
+  cout << endl << "Size of stack: " << st.getSize() << endl;
+
+  st.pop();
+  st.pop();
+  if(st.isEmpty()) 
+  {
+    cout << "Empty" << endl;
+  }
+  else {
+    cout << "Not empty" << endl;
+  }
+
+//   st.push(30);
+//   st.print();
+
+//     st.push(10);
+//   st.print();
+
+//   st.push(20);
+//   st.print();
+
+
+
+//   st.push(30);
+//   st.print();
+//     st.push(10);
+//   st.print();
+
+//   st.push(20);
+//   st.print();
+
+//   st.push(30);
+ // st.print();
+
+//   st.pop();
+//   st.print();
+//   st.pop();
+//   st.print();
+//   st.pop();
+//   st.print();
+
+  return 0;
+}
