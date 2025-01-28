@@ -1,38 +1,35 @@
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
- * };
- */
-class Solution {
-public:
-    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
-        if(root == NULL )
-        return NULL;
-        if(root->val == p->val) {
-             return p;
-        }
-        if(root->val == q->val) {
-            return q;
-        }
-        
-        TreeNode* leftAns = lowestCommonAncestor(root->left,p,q);
-        TreeNode* rightAns = lowestCommonAncestor(root->right,p,q);
+#include <iostream>
+#include<stack>
+using namespace std;
 
-        if(leftAns == NULL && rightAns == NULL)
-            return NULL;
-        else if(leftAns != NULL && rightAns == NULL)
-            return leftAns;
-        else if(leftAns == NULL && rightAns != NULL)
-            return rightAns;
-        else 
-        return root;
+int main() {
+
+  //creation
+  stack<int> st;
+
+  //insertion
+  st.push(10);
+  st.push(20);
+  st.push(30);
+
+  //size check
+  cout << "Size of stack is: " << st.size() << endl;
+
+  //remove 
+  st.pop(); 
+
+  //check empty
+  if(st.empty()) {
+    cout << "Stack is empty" << endl;
+  }
+  else {
+    cout << "stack is non empty" << endl;
+  }
 
 
+  //top element
+  cout << st.top() << endl;
 
 
-    }
-};
+  return 0;
+}
