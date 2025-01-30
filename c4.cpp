@@ -1,46 +1,60 @@
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
- * };
- */
-class Solution {
-public:
-    void solve(TreeNode* root, int targetSum, vector<vector<int>> &ans, vector<int> temp, int sum) {
-        //base case
-        if(root == NULL) {
-            return;
-        }
-        //1 casE SOLVE KRNA H 
-        sum += root->val;
-        temp.push_back(root->val);
+#include <iostream>
+#include<stack>
+using namespace std;
 
-        //extra case
-        if(root->left == NULL && root->right == NULL) {
-            //verify
-            if(sum == targetSum) {
-                //store temp path in final ans array
-                ans.push_back(temp);
-            }
-            else {
-                return;
-            }
-        }
+void solve(stack<int> &st, int& pos, int &ans) {
+  //base case
+  if(pos == 1) {
+    //ans =  st.top();
+    cout << "Deleting "<< st.top() << endl;
+    st.pop();
+    return;
+  }
+  //1 case hum solve krenge
+  pos--;
+  int temp = st.top();
+  st.pop();
+  //recursion
+  solve(st,pos,ans);
+  //backtracjk
+  st.push(temp);
+}
 
-        //baaki recursion sambhal lega
-        solve(root->left, targetSum, ans, temp, sum);
-        solve(root->right, targetSum, ans, temp, sum);
+int getMiddleElement(stack<int> &st) {
+  int size = st.size();
+  if(st.empty()){
+    cout << "Stack is empty, no middle element" << endl;
+    return -1;
+  }
+  else {
+    //stack is not empty
+    //odd
+    int pos = 0;
+    if(size & 1) {
+      pos = size/2 + 1;
     }
-    vector<vector<int>> pathSum(TreeNode* root, int targetSum) {
-        vector<vector<int>> ans;
-        vector<int> temp;
-        int sum = 0;
-        solve(root, targetSum, ans, temp, sum);
-        return ans;
+    else {
+      //even
+      pos = size/2;
     }
-};
+    int ans = -1;
+    solve(st,pos,ans);
+    return ans;
+  }
+}
+
+int main() {
+  stack<int> st;
+  st.push(10);
+  st.push(20);
+  st.push(30);
+  st.push(50);
+  st.push(60);
+
+  cout << "before size" << st.size() << endl; 
+  int mid = getMiddleElement(st);
+  cout << "Middle element: " << mid << endl;
+
+  cout << "after size" << st.size() << endl; 
+  return 0;
+}
