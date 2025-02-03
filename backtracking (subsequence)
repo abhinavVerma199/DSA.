@@ -1,0 +1,30 @@
+// find subsequence of string abc (include and exlclude pattern)
+#include <iostream>
+#include <sting>
+
+using namespace std;
+
+void subsq(string&s){
+   int num_subs = pow(2, s.size()); //no of subsequences
+
+ for (int n = 0; n < num_subs; ++n){
+
+  string out;
+     int num = n;
+
+     //convert num to binary
+     while(num){
+        int b = (num & 1);
+        cout<< b << " ";
+        num >>= 1;
+     }
+     cout << endl;
+ }
+}
+
+int main() {
+      string s = "abc";
+      subsq(s);
+
+  return 0;
+}
